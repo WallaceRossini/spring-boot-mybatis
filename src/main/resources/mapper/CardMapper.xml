@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper>
+<mapper namespace="com.example.demo.repository.CardRepository" >
+    <!--    result maps     -->
+    <resultMap id="CardResultMap" type="com.example.demo.model.Card" >
+        <id property = "id" column = "id"/>
+        <result property = "cardNumber" column = "cardnumber"/>
+        <result property = "cardType" column = "cardtype"/>
+        <result property = "email" column = "email"/>
+
+        <!--        one to one     -->
+        <association property="user" column="email"
+                     javaType="com.knf.dev.demo.model.User"
+                     select="selectUserFromCard"/>
+    </resultMap>
+
+    <!-- one to one select  -->
+    <select id="selectCardById"
+            resultMap="CardResultMap"
+            parameterType="java.lang.Integer" >
+        SELECT
+        cards.id,
+        cards.email,
+        cards.cardnumber,
+        cards.cardtype
+        FROM
+        cards
+        WHERE
+        id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectUserFromCard"
+            parameterType="java.lang.String"
+            resultType="com.example.demo.model.User">
+        SELECT
+        users.name,
+        users.email
+        FROM
+        users
+        WHERE
+        email = #{email}
+    </select>
+</mapper>
